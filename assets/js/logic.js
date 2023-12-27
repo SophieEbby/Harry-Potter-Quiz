@@ -13,19 +13,19 @@
 // !Timer starts
 // !The first question appears (with its answers)
 
-// For each question:
-// User clicks an answer
-// Their choice is compared to the correct answer as stored in the question's object
-// If correct, tell them
-// If incorrect, tell them AND subtract 10 seconds from the timer
+// !For each question:
+// !User clicks an answer
+// !Their choice is compared to the correct answer as stored in the question's object
+// !If correct, tell them
+// !If incorrect, tell them AND subtract 10 seconds from the timer
 // Optional: play a sound for correct or incorrect
-// Either way, the question disappears after a few seconds and the next question appears
+// !Either way, the question disappears after a few seconds and the next question appears
 
-// After the last question:
-// Timer stops
-// Question disappears
-// Form appears for user to enter their initials
-// Display their score (score is the time left on the quiz)
+// !After the last question:
+// !Timer stops
+// !Question disappears
+// !Form appears for user to enter their initials
+// !Display their score (score is the time left on the quiz)
 
 // User submits form
 // Initials and score get stored in local storage
@@ -44,6 +44,10 @@ var feedbackElement = document.getElementById("feedback");
 var timerElement = document.getElementById("time");
 var timerId;
 var startBtn = document.getElementById("start");
+var userScore;
+var addInitials;
+var userInitials = "";
+var submitBtn;
 
 
 // Questions
@@ -114,7 +118,6 @@ function clockTick() {
     }
 }
 
-
 // Sets question information
 function getQuestion() {
     var currentQuestion = questions[currentQuestionIndex];
@@ -175,8 +178,43 @@ function questionClick() {
     }
 }
 
-function endQuiz() { }
+// Ends quiz
+function endQuiz() {
+    // Stops the timer
+    clearInterval(timerId);
+    // Hides questions element
+    questionsElement.setAttribute("style", "display: none");
+    // Shows scores element
+    scores.setAttribute("style", "display: block");
 
+    addUser();
+}
+
+// Creates user info input form
+function addUser() {
+    // Creates elements
+    userScore = document.createElement("p");
+    addInitials = document.createElement("p");
+    userInitials = document.createElement("input");
+    submitBtn = document.createElement("button");
+    // Sets text and attributes of elements
+    userScore.textContent = `You have completed the Harry Potter Quiz! You have scored ${time}!`;
+    addInitials.textContent = "Add your initials here:";
+    userInitials.setAttribute("name", "initials");
+    userInitials.setAttribute("placeholder", "Type initials here");
+    submitBtn.textContent = "Submit";
+    submitBtn.setAttribute("class", "choice");
+    submitBtn.setAttribute("id", "submit");
+    // Appends elements
+    scores.appendChild(userScore);
+    scores.appendChild(addInitials);
+    scores.appendChild(userInitials);
+    scores.appendChild(submitBtn);
+    // Adds event listener to submit button
+    submitBtn.addEventListener("click", enterInit);
+}
+
+function enterInit() {}
 
 
 // Adds click listener to start button and sets startQuiz() as its action
