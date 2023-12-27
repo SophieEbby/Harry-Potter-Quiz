@@ -27,23 +27,21 @@
 // !Form appears for user to enter their initials
 // !Display their score (score is the time left on the quiz)
 
-// User submits form
-// Initials and score get stored in local storage
-// User is taken to the high scores page
-// High scores are listed, sorted highest to lowest
-// User has option to take the quiz again
+// !User submits form
+// !Initials and score get stored in local storage
+// !User is taken to the high scores page
+// !High scores are listed, sorted highest to lowest
+// !User has option to take the quiz again
 
 // Global variables
 var time = 0;
 var currentQuestionIndex = 0;
 var startScreen = document.getElementById("start-screen");
-var scores = document.getElementById("score");
 var questionsElement = document.getElementById("questions");
 var choicesElement = document.getElementById("choices");
 var feedbackElement = document.getElementById("feedback");
 var timerElement = document.getElementById("time");
 var timerId;
-var startBtn = document.getElementById("start");
 var endscreen = document.getElementById("end-screen");
 var finalScore = document.getElementById("final-score");
 var submitBtn = document.getElementById("submit");
