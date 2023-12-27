@@ -44,10 +44,10 @@ var feedbackElement = document.getElementById("feedback");
 var timerElement = document.getElementById("time");
 var timerId;
 var startBtn = document.getElementById("start");
-var userScore;
-var addInitials;
-var userInitials = "";
-var submitBtn;
+var endscreen = document.getElementById("end-screen");
+var finalScore = document.getElementById("final-score");
+var submitBtn = document.getElementById("submit");
+var userInitials = document.getElementById("initials");
 
 
 // Questions
@@ -74,7 +74,7 @@ var questions = [
         name: "question4",
         title: "Who are Harry's best friends?",
         choices: ["Ron & Hermione", "Neville & Colin", "Ginny & Oliver", "Draco & Dudley"],
-        answer: "CSS",
+        answer: "Ron & Hermione",
     },
     {
         name: "question5",
@@ -86,14 +86,12 @@ var questions = [
 
 // Starts the quiz
 function startQuiz() {
-    // Sets timer to 60 seconds
-    time = 60;
+    // Sets timer to 75 seconds
+    time = 75;
     // Sets question index to 0
     currentQuestionIndex = 0;
     // Hides the landing page
     startScreen.setAttribute("style", "display: none");
-    // Hides the scores page
-    scores.setAttribute("style", "display: none");
     // Shows the first question
     questionsElement.setAttribute("style", "display: block");
     // Shows the timer
@@ -184,38 +182,57 @@ function endQuiz() {
     clearInterval(timerId);
     // Hides questions element
     questionsElement.setAttribute("style", "display: none");
-    // Shows scores element
-    scores.setAttribute("style", "display: block");
-
-    addUser();
-}
-
-// Creates user info input form
-function addUser() {
-    // Creates elements
-    userScore = document.createElement("p");
-    addInitials = document.createElement("p");
-    userInitials = document.createElement("input");
-    submitBtn = document.createElement("button");
-    // Sets text and attributes of elements
-    userScore.textContent = `You have completed the Harry Potter Quiz! You have scored ${time}!`;
-    addInitials.textContent = "Add your initials here:";
-    userInitials.setAttribute("name", "initials");
-    userInitials.setAttribute("placeholder", "Type initials here");
-    submitBtn.textContent = "Submit";
-    submitBtn.setAttribute("class", "choice");
-    submitBtn.setAttribute("id", "submit");
-    // Appends elements
-    scores.appendChild(userScore);
-    scores.appendChild(addInitials);
-    scores.appendChild(userInitials);
-    scores.appendChild(submitBtn);
+    //Sets finalscore 
+    finalScore.textContent = time;
+    //displays end screen
+    endscreen.setAttribute("style", "display: block");
     // Adds event listener to submit button
     submitBtn.addEventListener("click", enterInit);
 }
 
-function enterInit() {}
+
+
+// Handles input & submit of initials and score
+function enterInit() {
+    // Checks whether user has entered initials
+    if (userInitials.value.length < 2) {
+        // If not, prompts user to add initials
+        feedbackElement.setAttribute("style", "display: block");
+        feedbackElement.textContent = "Please add your initials!";
+    } else {
+        // If so, saves the score
+        saveScore();
+        window.location.href = "highscores.html";
+    }
+}
+
+// Saves scores in local storage
+function saveScore() {
+    var scoresArr = [];
+    // Creates object of user initials & score
+    var playerInfo = {
+        playerInit: userInitials.value,
+        score: time
+    }
+    // Gets existing scores from local storage
+    var scoresData = localStorage.getItem("playerInfo");
+    // Parses existing scores into an array
+    scoresArr = [JSON.parse(scoresData)];
+    // Checks whether there are existing scores
+    if (scoresArr[0] !== null) {
+        // If so, adds new score to array
+        scoresArr = [...scoresArr[0], playerInfo];
+        // Sorts array by scores, descending
+        var sortScores = scoresArr.sort((a, b) => (a.score < b.score) ? 1 : -1)
+        // Sets sorted user information in local storage
+        localStorage.setItem("playerInfo", JSON.stringify(sortScores));
+    } else {
+        // If not, sets user information in local storage
+        localStorage.setItem("playerInfo", JSON.stringify([playerInfo]));
+    }
+}
 
 
 // Adds click listener to start button and sets startQuiz() as its action
 start.addEventListener("click", startQuiz);
+
