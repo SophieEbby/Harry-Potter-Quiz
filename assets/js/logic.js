@@ -40,6 +40,7 @@ var startScreen = document.getElementById("start-screen");
 var scores = document.getElementById("score");
 var questionsElement = document.getElementById("questions");
 var choicesElement = document.getElementById("choices");
+var feedbackElement = document.getElementById("feedback");
 var timerElement = document.getElementById("time");
 var timerId;
 var startBtn = document.getElementById("start");
@@ -137,9 +138,44 @@ function getQuestion() {
     });
 }
 
-function questionClick() {}
+// Handles click on answer button
+function questionClick() {
+    // Compares selected button value to correct answer
+    if (this.value !== questions[currentQuestionIndex].answer) {
+        // If they don't match, deduct 10 seconds
+        time -= 10;
+        // If that reduces time to 0 or less, set timer to 0 and end quiz
+        if (time <= 0) {
+            time = 0;
+            endQuiz();
+        }
+        // Sets timer text to current time
+        timerElement.textContent = time;
+        // Shows feedback element for incorrect answer
+        feedbackElement.setAttribute("style", "display: block");
+        feedbackElement.textContent = "That was the wrong answer.";
+    } else {
+        // If selected button value matches correct answer, shows feedback element for correct answer
+        feedbackElement.setAttribute("style", "display: block");
+        feedbackElement.textContent = "Congrats! That's right.";
+    }
+    // Sets feedback element to show for 2 seconds
+    setTimeout(function () {
+        feedbackElement.setAttribute("style", "display: none");
+    }, 2000);
+    // Advances to next question index
+    currentQuestionIndex++;
+    // Checks if quiz has reached the end of the questions array
+    if (currentQuestionIndex === questions.length) {
+        // If so, ends quiz
+        endQuiz();
+    } else {
+        // If not, calls next question
+        getQuestion();
+    }
+}
 
-function endQuiz() {}
+function endQuiz() { }
 
 
 
