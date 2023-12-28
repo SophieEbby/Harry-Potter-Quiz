@@ -35,11 +35,11 @@
 
 // Global variables
 var time = 0;
-var currentQuestionIndex = 0;
+var currQuestionIndex = 0;
 var startScreen = document.getElementById("start-screen");
-var questionsElement = document.getElementById("questions");
-var choicesElement = document.getElementById("choices");
-var feedbackElement = document.getElementById("feedback");
+var questionsEle = document.getElementById("questions");
+var choicesEle = document.getElementById("choices");
+var feedbackEle = document.getElementById("feedback");
 var timerElement = document.getElementById("time");
 var timerId;
 var endscreen = document.getElementById("end-screen");
@@ -87,11 +87,11 @@ function startQuiz() {
     // Sets timer to 75 seconds
     time = 75;
     // Sets question index to 0
-    currentQuestionIndex = 0;
+    currQuestionIndex = 0;
     // Hides the landing page
     startScreen.setAttribute("style", "display: none");
     // Shows the first question
-    questionsElement.setAttribute("style", "display: block");
+    questionsEle.setAttribute("style", "display: block");
     // Shows the timer
     timerElement.setAttribute("style", "display: inline-block");
     // Calls clockTick() and sets the timer interval to 1 second
@@ -100,6 +100,7 @@ function startQuiz() {
     }, 1000);
     // Sets the text of the timer to the time as time updates
     timerElement.textContent = time;
+    //calls getQuestion()
     getQuestion();
 }
 
@@ -116,12 +117,12 @@ function clockTick() {
 
 // Sets question information
 function getQuestion() {
-    var currentQuestion = questions[currentQuestionIndex];
-    var titleEl = document.getElementById("question-title");
+    var currentQuestion = questions[currQuestionIndex];
+    var titleEle = document.getElementById("question-title");
     // Sets the question text to the correct number + question text
-    titleEl.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.title}`;
+    titleEle.textContent = `${currQuestionIndex + 1}. ${currentQuestion.title}`;
     // Sets the 'choices' element to an empty string so it can be filled by the current question's choices
-    choicesElement.innerHTML = "";
+    choicesEle.innerHTML = "";
     currentQuestion.choices.forEach(function (choice, i) {
         // Creates a button element for each choice
         var choiceBtn = document.createElement("button");
@@ -131,16 +132,16 @@ function getQuestion() {
         // Sets the text of each button to the given choice
         choiceBtn.textContent = `${i + 1}. ${choice}`;
         // Appends the button to the HTML
-        choicesElement.appendChild(choiceBtn);
+        choicesEle.appendChild(choiceBtn);
         // Adds click listener to each button
-        choiceBtn.addEventListener("click", questionClick);
+        choiceBtn.addEventListener("click", selectQuestion);
     });
 }
 
-// Handles click on answer button
-function questionClick() {
+// Handles selection of question answer
+function selectQuestion() {
     // Compares selected button value to correct answer
-    if (this.value !== questions[currentQuestionIndex].answer) {
+    if (this.value !== questions[currQuestionIndex].answer) {
         // If they don't match, deduct 10 seconds
         time -= 10;
         // If that reduces time to 0 or less, set timer to 0 and end quiz
@@ -151,21 +152,21 @@ function questionClick() {
         // Sets timer text to current time
         timerElement.textContent = time;
         // Shows feedback element for incorrect answer
-        feedbackElement.setAttribute("style", "display: block");
-        feedbackElement.textContent = "That was the wrong answer.";
+        feedbackEle.setAttribute("style", "display: block");
+        feedbackEle.textContent = "That was the wrong answer.";
     } else {
         // If selected button value matches correct answer, shows feedback element for correct answer
-        feedbackElement.setAttribute("style", "display: block");
-        feedbackElement.textContent = "Congrats! That's right.";
+        feedbackEle.setAttribute("style", "display: block");
+        feedbackEle.textContent = "Congrats! That's right.";
     }
-    // Sets feedback element to show for 2 seconds
+    // Sets feedback element to show for 1 seconds
     setTimeout(function () {
-        feedbackElement.setAttribute("style", "display: none");
-    }, 2000);
+        feedbackEle.setAttribute("style", "display: none");
+    }, 1000);
     // Advances to next question index
-    currentQuestionIndex++;
+    currQuestionIndex++;
     // Checks if quiz has reached the end of the questions array
-    if (currentQuestionIndex === questions.length) {
+    if (currQuestionIndex === questions.length) {
         // If so, ends quiz
         endQuiz();
     } else {
@@ -179,26 +180,26 @@ function endQuiz() {
     // Stops the timer
     clearInterval(timerId);
     // Hides questions element
-    questionsElement.setAttribute("style", "display: none");
+    questionsEle.setAttribute("style", "display: none");
     //Sets finalscore 
     finalScore.textContent = time;
     //displays end screen
     endscreen.setAttribute("style", "display: block");
     // Adds event listener to submit button
-    submitBtn.addEventListener("click", enterInit);
+    submitBtn.addEventListener("click", userInput);
 }
 
 
 
 // Handles input & submit of initials and score
-function enterInit() {
+function userInput() {
     // Checks whether user has entered initials
     if (userInitials.value.length < 2) {
         // If not, prompts user to add initials
-        feedbackElement.setAttribute("style", "display: block");
-        feedbackElement.textContent = "Please add your initials!";
+        feedbackEle.setAttribute("style", "display: block");
+        feedbackEle.textContent = "Please add your initials!";
     } else {
-        // If so, saves the score
+        // If so, saves the score and shows the highscore html page
         saveScore();
         window.location.href = "highscores.html";
     }
