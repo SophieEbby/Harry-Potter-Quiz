@@ -40,4 +40,5 @@ function clearScores() {
 
 // Adds click listener to clear button and sets clearScores() as its action
 clear.addEventListener("click", clearScores);
+// calls displayScores() function
 displayScores();
